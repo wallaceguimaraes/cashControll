@@ -1,7 +1,6 @@
 import React, { useState, useEffect} from 'react';
 import { StyleSheet, View,Text, TextInput, FlatList, TouchableOpacity, ScrollView, LogBox } from 'react-native';
 import { Ionicons, Fontisto } from '@expo/vector-icons';
-import { Icon } from '@iconify/react';
 import Sad from '../../../assets/icons/sad.svg';
 import Assovio from '../../../assets/icons/assovio.svg';
 import Baby from '../../../assets/icons/babysmile.svg';

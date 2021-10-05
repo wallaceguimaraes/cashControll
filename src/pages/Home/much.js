@@ -10,34 +10,28 @@ import { useNavigation } from "@react-navigation/native";
 
 function Much({route}){
 
-    
     const [ money, setMoney ] = useState(0)
     const [ econom, setEconom ] = useState(0)
     const [ dateKey, setDateKey ] = useState('')
-
-
     const [ visibleModal, setVisibleModal ] = useState(false)
     const [ message, setMessage] = useState('')
-
-    const navigation = useNavigation(); 
-
     const [ dateCurrent, setDateCurrent ] =useState('')
     const [ opacity, setOpacity ] = useState(new Animated.Value(0));
     const [ opacityTwo, setOpacityTwo ] = useState(new Animated.Value(0));
 
+    const navigation = useNavigation(); 
+
     function getDate(){
-        var data = new Date();
-        var dia = String(data.getDate()).padStart(2, '0');
-        var mes = String(data.getMonth() + 1).padStart(2, '0');
-        var ano = data.getFullYear();
+        let data = new Date();
+        let dia = String(data.getDate()).padStart(2, '0');
+        let mes = String(data.getMonth() + 1).padStart(2, '0');
+        let ano = data.getFullYear();
         setDateCurrent(dia + '/' + mes + '/' + ano)
     }
 
    function closeModal(boolean){
         setVisibleModal(boolean)
     }
-
-
 
     async function saveInfo() {
 
@@ -54,19 +48,15 @@ function Much({route}){
            econom
         }
 
-        await AsyncStorage.clear();
-
         AsyncStorage.setItem('user', route.params?.name)
         AsyncStorage.setItem('finance', JSON.stringify(finance))
 
        let response = null;
        response = await AsyncStorage.getItem('finance')
-       //alert(response)
 
        if(response !== null){
         navigation.navigate('Dashboard')
        }
-
 
       }
       
@@ -78,21 +68,19 @@ function Much({route}){
         setMoney(Number(money))
          
         if(econom > money){
-        setMessage('')  
-        setVisibleModal(true)
-        return
+            setMessage('')  
+            setVisibleModal(true)
+            return
         }
 
         if(econom === money){
-           setVisibleModal(true)
-           setMessage('Você não pode economizar tudo isso!')
-           return 
+            setVisibleModal(true)
+            setMessage('Você não pode economizar tudo isso!')
+            return 
         }
 
         saveInfo()
-
     }
-
 
 
     useEffect(() => {
@@ -123,55 +111,49 @@ function Much({route}){
     return(
        <ScrollView  showsVerticalScrollIndicator={false}>
            <KeyboardAvoidingView>
-           <Animated.View style={{height: 200, opacity: opacity, justifyContent: 'flex-end', alignItems: 'center', marginBottom: 20}}>
-                <Text style={{fontSize: 24, color: '#1E9450'}}>Agora falta pouco {route.params?.name}! </Text>
+           <Animated.View style={styles.viewAnime}>
+                <Text style={styles.text}>Agora falta pouco {route.params?.name}! </Text>
             </Animated.View>
-
             <Animated.View style={{opacity: opacityTwo}} >
-
-            <View style={{height: 150, justifyContent: 'flex-end', alignItems: 'center', marginBottom: 20}}>
-        
-               <Text style={{fontSize: 24, color: '#1E9450'}}>Vamos iniciar com</Text>
-               <Text style={{fontSize: 24, color: '#1E9450'}}>qual valor?</Text>
-            </View >
-
-            <View style={{height: 90, alignItems: 'center', justifyContent: 'flex-end', marginBottom: 20}}>
-               <TextInput keyboardType="number-pad" textAlign='center' style={{fontSize: 24, borderRadius:10, borderBottomWidth: 1, padding:5, borderColor:'#c4c4c4', width: 250, height: 44}} 
-            onChangeText={text => setMoney(text)}/>
-            </View>
-            <View style={{height: 90, justifyContent: 'flex-end', alignItems: 'center', marginBottom: 20}}>
-            <Money width={40} height={40} />
+                <View style={styles.viewTexts}>
+                    <Text style={styles.text}>Vamos iniciar com</Text>
+                    <Text style={styles.text}>qual valor?</Text>
+                </View >
+                <View style={styles.viewInput}>
+                    <TextInput  keyboardType="number-pad" 
+                                textAlign='center' 
+                                style={styles.input} 
+                                onChangeText={text => setMoney(text)}
+                    />
                 </View>
-            
-               
-            <Down width={40} height={40} />   
+                <View style={styles.viewIcon}>
+                    <Money width={40} height={40} />
+                </View>
+                <Down width={40} height={40} />   
+                <View style={styles.viewTexts2}>
+                    <Text style={styles.text}>Quanto desse dinheiro</Text>
+                    <Text style={styles.text}>você gostaria de</Text>
+                    <Text style={styles.text}>economizar?</Text>
+                </View >
+                <View style={styles.viewInput}>
+                <TextInput  keyboardType="number-pad" 
+                            textAlign='center' 
+                            style={styles.input} 
+                            onChangeText={text => setEconom(text)} />
+                </View>
 
-
-
-            <View style={{height: 140, justifyContent: 'flex-end', alignItems: 'center', marginBottom: 20}}>
-               <Text style={{fontSize: 24, color: '#1E9450'}}>Quanto desse dinheiro</Text>
-               <Text style={{fontSize: 24, color: '#1E9450'}}>você gostaria de</Text>
-               <Text style={{fontSize: 24, color: '#1E9450'}}>economizar?</Text>
-
-            </View >
-
-            <View style={{height: 90, alignItems: 'center', justifyContent: 'flex-end', marginBottom: 20}}>
-               <TextInput keyboardType="number-pad" textAlign='center' style={{fontSize: 24, borderRadius:10, borderBottomWidth: 1, padding:5, borderColor:'#c4c4c4', width: 250, height: 44}} 
-            onChangeText={text => setEconom(text)} />
-            </View>
-
-            <View style={{height: 250, alignItems: 'center', justifyContent: 'flex-start', marginTop: 105}}>
-            <TouchableOpacity onPress={verifyMoney} style={styles.button}>
-               <Text style={{color: '#fff', fontSize: 18, fontWeight: 'bold'}} >Pronto!</Text>        
-            </TouchableOpacity>
-            </View>
+                <View style={styles.viewButton}>
+                    <TouchableOpacity   onPress={verifyMoney} 
+                                        style={styles.button}
+                    >
+                        <Text style={styles.textButton} >Pronto!</Text>        
+                    </TouchableOpacity>
+                </View>
             </Animated.View>
-
-
-      <Modal animationType='slide' transparent={true} visible={visibleModal}>
-           <View style={{flex: 1, margin: 15, alignItems: 'center', justifyContent: 'center'}}>
-            <ViewModal close={() => closeModal(false)} message={message} ></ViewModal>
-          </View>
+            <Modal animationType='slide' transparent={true} visible={visibleModal}>
+              <View style={{flex: 1, margin: 15, alignItems: 'center', justifyContent: 'center'}}>
+                 <ViewModal close={() => closeModal(false)} message={message} ></ViewModal>
+              </View>
          </Modal>
          </KeyboardAvoidingView>
         </ScrollView>
@@ -187,6 +169,61 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    viewAnime: { 
+        height: 200, 
+        opacity: opacity, 
+        justifyContent: 'flex-end', 
+        alignItems: 'center', 
+        marginBottom: 20
+    },
+    viewTexts: {
+        height: 150,
+        justifyContent: 'flex-end', 
+        alignItems: 'center', 
+        marginBottom: 20
+    },
+    viewTexts2: {
+        height: 140, 
+        justifyContent: 'flex-end', 
+        alignItems: 'center', 
+        marginBottom: 20
+    },
+    text: {
+        fontSize: 24, 
+        color: '#1E9450'
+    },
+    viewInput: {
+        height: 90, 
+        alignItems: 'center', 
+        justifyContent: 'flex-end', 
+        marginBottom: 20
+    },
+    input: {
+        fontSize: 24, 
+        borderRadius:10, 
+        borderBottomWidth: 1, 
+        padding:5, 
+        borderColor:'#c4c4c4', 
+        width: 250, 
+        height: 44
+    },
+    viewIcon: { 
+        height: 90, 
+        justifyContent: 'flex-end', 
+        alignItems: 'center',
+        marginBottom: 20
+    },
+    viewButton: {
+        height: 250, 
+        alignItems: 'center', 
+        justifyContent: 'flex-start', 
+        marginTop: 105
+    },
+    textButton: {
+        color: '#fff', 
+        fontSize: 18, 
+        fontWeight: 'bold'
     },
     inputNumber: { 
         marginTop: 40, 

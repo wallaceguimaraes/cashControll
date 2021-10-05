@@ -2,42 +2,28 @@ import React, {useState, useEffect} from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Keyboard } from 'react-native';
 import Think from '../../../assets/icons/think.svg';
 import Smile from '../../../assets/icons/smile.svg';
-//import AsyncStorage from '@react-native-community/async-storage';
 import { useNavigation } from "@react-navigation/native";
-
-
 
 function Name ({route}){
 
-
-
-
- 
     const [name, setName] = useState('Menu nome é');
     const [height, setHeight] = useState(38);
     const [ face, setFace] = useState(false); 
-
     const navigation = useNavigation(); 
 
-
-   function gravarNome(name){
-      navigation.navigate('Much', {name: name})
-      
+    function gravarNome(name){
+        navigation.navigate('Much', {name: name})
+        //Keyboard.dismiss();
+      }
     
-      //Keyboard.dismiss();
-    }
-  
-
     useEffect(() => {
   
       clearInterval(route.params.point)
-      
       setFace(false);
 
       if(name === 'Menu nome é'){
         setFace(false);
         return
-
       }
 
       if(name.length >= 2){
@@ -57,16 +43,16 @@ function Name ({route}){
               (<Think width={64} height={64} /> )
             }   
 
-            <Text style={{color: '#ff004E', fontSize: 24}}>
+            <Text style={styles.text1}>
                 Qual é o seu primeiro nome?
             </Text >
 
-            <TextInput style={{fontSize: 18, borderRadius:10, borderBottomWidth: 1, padding:8, borderColor:'#c4c4c4', height: 37, width: 250}} 
+            <TextInput style={styles.input} 
             onChangeText={text => setName(text)
             }/>
 
             <TouchableOpacity style={ styles.button} onPress={() => gravarNome(name)}>
-                <Text style={{color: '#ffffff', fontSize: 18, flexWrap:'wrap' }}>{name}</Text>
+                <Text style={styles.textButton}>{name}</Text>
             </TouchableOpacity>
             </View>
     );
@@ -84,7 +70,19 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'space-evenly',
     },
-
+    text1: {
+      color: '#ff004E', 
+      fontSize: 24
+    },
+    input: {
+      fontSize: 18, 
+      borderRadius:10, 
+      borderBottomWidth: 1, 
+      padding:8, 
+      borderColor:'#c4c4c4', 
+      height: 37, 
+      width: 250
+    },
     button: {
         padding: 2, 
         marginBottom: 40,
@@ -103,6 +101,11 @@ const styles = StyleSheet.create({
         shadowRadius: 4.65,
         elevation: 4,  
          
+    },
+    textButton: {
+      color: '#ffffff', 
+      fontSize: 18, 
+      flexWrap:'wrap' 
     }
   });
 
