@@ -96,7 +96,7 @@ function Much({route}){
             return 
         }
 
-       // saveInfo()
+       saveInfo()
     }
 
 
