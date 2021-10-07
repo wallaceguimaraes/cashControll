@@ -15,9 +15,12 @@ import DatePicker from 'react-native-datepicker';
 import Financa from '../../Components/ListaFinancas';
 import Finance from '../../Services/sqlite/Finance';
 import Bill from '../../Services/sqlite/Bill';
+import User from '../../Services/sqlite/User';
 
 
 function List(){
+
+   
 
     const [ total, setTotal ] = useState(0);
     const [ name, setName ] = useState('');
@@ -35,7 +38,6 @@ function List(){
     const [ sobraP, setSobraP ] = useState(0);
 
     const navigation = useNavigation(); 
-
 
     const [ date, setDate ] = useState('');
     const [ feed, setFeed ] = useState([/* { id: '1', 
@@ -86,18 +88,14 @@ function List(){
 
 
      useEffect(() => {
-     
-        
         loadData();
 
-
+    
     }) 
 
     function screenDebt(){
         getDate()
         
-        let key = dateCurrent.substring(3,10);
-        setDateKey(key)
         navigation.navigate('insertDebt', {key: dateKey} )
 
     }
@@ -119,15 +117,26 @@ function List(){
 
     async function loadData(){
 
+        User.findOneLast()
+        .then( data => setName(data[0].name))
+        .catch( err => console.log(err) )
+
+        //alert(name)
+
         getDate()
 
         let key = dateCurrent.substring(3,10);
         setDateKey(key)
 
-        Finance.findByDateKey( key ) 
+
+        Bill.findByDateKey( key ) 
         .then( data => setFeed(data))
         .catch( err => console.log(err) )
         
+
+        Finance.find( key ) 
+        .then( data => setTotal(data.total))
+        .catch( err => console.log(err) )
 
         /* 
        let response = await AsyncStorage.getItem('finance')
@@ -187,7 +196,7 @@ function List(){
         <View style={styles.container}>
             <View style={styles.card}>
                 <View style={{flex:1, alignItems: 'center', paddingTop: 20}}>
-                <Text style={{color: '#24AE5F', fontSize: 22}} >Total: {id}</Text>
+                <Text style={{color: '#24AE5F', fontSize: 22}} >Total: {total}</Text>
                 </View>
                 <View style={{flex: 2, flexDirection: 'row', padding: 18}}>
                     <View style={[styles.column, {justifyContent: 'space-around',}]}>

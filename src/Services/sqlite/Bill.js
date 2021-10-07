@@ -23,7 +23,6 @@ db.transaction((tx) => {
      "CREATE TABLE IF NOT EXISTS bill (id INTEGER PRIMARY KEY AUTOINCREMENT, desc TEXT, date TEXT, value REAL, icon TEXT, color TEXT, date_key TEXT);"
   );
 });
-
 /**
  * CRIAÇÃO DE UM NOVO REGISTRO
  * - Recebe um objeto;
@@ -107,17 +106,18 @@ const find = (id) => {
  *  - Pode retornar erro (reject) caso o ID não exista ou então caso ocorra erro no SQL;
  *  - Pode retornar um array vazio caso nenhum objeto seja encontrado.
  */
-const findByBrand = (dateCurrent) => {
+ const findByDateKey = (dateKey) => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
-        "SELECT * FROM finance WHERE dateCurrent = ?;",
-        [dateCurrent],
+        //"SELECT * FROM finance WHERE date_key = ?;",
+        "SELECT b.* FROM bill b where b.date_key = ? order by b.date DESC;",
+        [dateKey],
         //-----------------------
         (_, { rows }) => {
           if (rows.length > 0) resolve(rows._array);
-          else reject("Obj not found: Data atual=" + dateCurrent); // nenhum registro encontrado
+          else reject("Obj not found: Data atual=" + dateKey); // nenhum registro encontrado
         },
         (_, error) => reject(error) // erro interno em tx.executeSql
       );
@@ -176,7 +176,7 @@ export default {
   create,
   update,
   find,
-  findByBrand,
+  findByDateKey,
   all,
   remove,
 };

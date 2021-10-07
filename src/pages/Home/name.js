@@ -12,8 +12,8 @@ function Name ({route}){
     const [ face, setFace] = useState(false); 
     const navigation = useNavigation(); 
 
-     function gravarNome(name){
-    //  let response = await AsyncStorage.setItem("usuario", name)
+   async function gravarNome(name){
+      let response = await AsyncStorage.setItem("usuario", name)
       //setName(await AsyncStorage.getItem('user'))
       //let data =  JSON.parse(response)
         

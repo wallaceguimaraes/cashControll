@@ -13,7 +13,7 @@ import db from "../sqlite/SQLiteDatabase";
 
 
 
-/* db.transaction((tx) => {
+ db.transaction((tx) => {
   //<<<<<<<<<<<<<<<<<<<<<<<< USE ISSO APENAS DURANTE OS TESTES!!! >>>>>>>>>>>>>>>>>>>>>>>
   //tx.executeSql("DROP TABLE cars;");
   //<<<<<<<<<<<<<<<<<<<<<<<< USE ISSO APENAS DURANTE OS TESTES!!! >>>>>>>>>>>>>>>>>>>>>>>
@@ -25,14 +25,7 @@ import db from "../sqlite/SQLiteDatabase";
   );
 
 });
- */
-
-db.transaction((tx) => {
-
-    tx.executeSql(
-       "CREATE TABLE IF NOT EXISTS bill (id INTEGER PRIMARY KEY AUTOINCREMENT, desc TEXT, date TEXT, value REAL, icon TEXT, color TEXT, FOREIGN KEY (finance_id) REFERENCES finance (id));"
-    );
-  });
+ 
 
 /**
  * CRIAÇÃO DE UM NOVO REGISTRO
@@ -91,17 +84,17 @@ const update = (id, obj) => {
  *  - O resultado da Promise é o objeto (caso exista);
  *  - Pode retornar erro (reject) caso o ID não exista ou então caso ocorra erro no SQL.
  */
-const find = (id) => {
+const find = (dateKey) => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
-        "SELECT * FROM finance WHERE id=?;",
-        [id],
+        "SELECT * FROM finance WHERE date_key=? order by id DESC;",
+        [dateKey],
         //-----------------------
         (_, { rows }) => {
           if (rows.length > 0) resolve(rows._array[0]);
-          else reject("Obj not found: id=" + id); // nenhum registro encontrado
+          else reject("Obj not found: data key=" + dateKey); // nenhum registro encontrado
         },
         (_, error) => reject(error) // erro interno em tx.executeSql
       );
@@ -123,7 +116,7 @@ const findByDateKey = (dateKey) => {
       //comando SQL modificável
       tx.executeSql(
         //"SELECT * FROM finance WHERE date_key = ?;",
-        "SELECT b.* FROM bill b where b.date_key = ? order by b.date DESC;",
+        "SELECT f.* FROM finance f where f.date_key = ? order by f.date_current DESC;",
         [dateKey],
         //-----------------------
         (_, { rows }) => {

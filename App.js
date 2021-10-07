@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavigationContainer} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -11,6 +11,7 @@ import insertDebt from './src/pages/Insert/insertDebt';
 import insertAdditional from './src/pages/Insert/insertAdditional';
 import  AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect } from 'react/cjs/react.development';
+import User from './src/Services/sqlite/User';
 
 
 const Stack = createNativeStackNavigator();
@@ -22,31 +23,32 @@ export default function App() {
  * Caso exista verificar se iniciou um novo mes
  * para gerar outra renda
  */
+ const [ qtdUser, setQtdUser ] = useState(0);
 
 
- if ( 1 === 1){
-  rotaInicio = 'Dashboard';
-}
 
-  async function getUser(){
-    let usuario = null;
+// if ( 1 === 1){
+  rotaInicio = 'Ola';
+//}
 
-/*     try{
-    let usuario = await AsyncStorage.getItem("usuario")
-    }catch(e){
-      usuario = null;
-    } */
-    let rotaInicio = 'Ola';
-    if(usuario !== null){
+   function getUser(){
+
+    User.countUser() 
+    .then( data => setQtdUser(data.qtd))
+    .catch( err => console.log(err) )
+    
+console.log(qtdUser)
+    if(qtdUser === 1){
       rotaInicio = 'Dashboard';
     }
   
   }
 
-/* 
+
   useEffect(() => {
     getUser()
-  }) */
+
+  }) 
 
   return (
     <NavigationContainer >

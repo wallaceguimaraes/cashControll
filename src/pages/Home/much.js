@@ -15,6 +15,8 @@ import ViewModal from './viewModal';
 import  AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from "@react-navigation/native";
 import Finance from '../../Services/sqlite/Finance';
+import User from '../../Services/sqlite/User';
+
 
 
 function Much({route}){
@@ -27,6 +29,8 @@ function Much({route}){
     const [ dateCurrent, setDateCurrent ] =useState('')
     const [ opacity, setOpacity ] = useState(new Animated.Value(0));
     const [ opacityTwo, setOpacityTwo ] = useState(new Animated.Value(0));
+    const [name, setName] = useState('');
+
 
     const navigation = useNavigation(); 
 
@@ -42,7 +46,7 @@ function Much({route}){
         setVisibleModal(boolean)
     }
 
-    async function saveInfo() {
+     function saveInfo() {
 
          let key = dateCurrent.substring(3,10);
         setDateKey(key)
@@ -53,10 +57,17 @@ function Much({route}){
 
         let rest = money - econom;
 
+
+        User.create({name: route.params?.name})
+        .then( id => console.log(id) )
+        .catch( err => alert(err) )
+    
+
         Finance.create( {date_current: dateCurrent, date_key: key, total: money, econom: econom, rest: rest } )
         .then( id =>  navigation.navigate('Dashboard', {id: id}) )
         .catch( err => alert(err) )
     
+
 
       }
       
@@ -64,13 +75,16 @@ function Much({route}){
     function verifyMoney(){
         
         setVisibleModal(false)
-        setEconom(Number(econom))
+      /*   setEconom(Number(econom))
         setMoney(Number(money))
 
         let econom = Number(econom);
-        let money = Number(money);
+        let money = Number(money); */
+
+        console.log(typeof money)
 
         if(econom > money){
+
             setMessage('')  
             setVisibleModal(true)
             return
@@ -82,7 +96,7 @@ function Much({route}){
             return 
         }
 
-        saveInfo()
+       // saveInfo()
     }
 
 
@@ -126,7 +140,7 @@ function Much({route}){
                     <TextInput  keyboardType="number-pad" 
                                 textAlign='center' 
                                 style={styles.input} 
-                                onChangeText={text => setMoney(text)}
+                                onChangeText={text => setMoney(Number(text))}
                     />
                 </View>
                 <View style={styles.viewIcon}>
@@ -142,7 +156,7 @@ function Much({route}){
                 <TextInput  keyboardType="number-pad" 
                             textAlign='center' 
                             style={styles.input} 
-                            onChangeText={text => setEconom(text)} />
+                            onChangeText={text => setEconom(Number(text))} />
                 </View>
 
                 <View style={styles.viewButton}>
