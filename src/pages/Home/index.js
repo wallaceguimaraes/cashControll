@@ -11,7 +11,7 @@ export default function Ola (){
 
   useEffect(() => {
 
-    AsyncStorage.clear();
+    //AsyncStorage.clear();
 
     Animated.sequence([
 

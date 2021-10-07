@@ -1,11 +1,20 @@
 import React, {useState, useEffect} from 'react';
-import { Animated, Modal, StyleSheet, View, Text, TextInput, TouchableOpacity, Keyboard, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { Animated, 
+         Modal, 
+         StyleSheet, 
+         View, 
+         Text, 
+         TextInput, 
+         TouchableOpacity, 
+         Keyboard, 
+         ScrollView, 
+         KeyboardAvoidingView } from 'react-native';
 import Money from '../../../assets/icons/money.svg';
 import Down from '../../../assets/icons/down.svg';
 import ViewModal from './viewModal';
 import  AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from "@react-navigation/native";
-
+import Finance from '../../Services/sqlite/Finance';
 
 
 function Much({route}){
@@ -35,28 +44,19 @@ function Much({route}){
 
     async function saveInfo() {
 
-        let key = dateCurrent.substring(3,10);
+         let key = dateCurrent.substring(3,10);
         setDateKey(key)
+   
 
-        key = 1;
+        setEconom(Number(econom))
+        setMoney(Number(money))
 
-        let finance = {
-           key, 
-           dateCurrent,
-           dateKey,
-           money,
-           econom
-        }
+        let rest = money - econom;
 
-        AsyncStorage.setItem('user', route.params?.name)
-        AsyncStorage.setItem('finance', JSON.stringify(finance))
-
-       let response = null;
-       response = await AsyncStorage.getItem('finance')
-
-       if(response !== null){
-        navigation.navigate('Dashboard')
-       }
+        Finance.create( {date_current: dateCurrent, date_key: key, total: money, econom: econom, rest: rest } )
+        .then( id =>  navigation.navigate('Dashboard', {id: id}) )
+        .catch( err => alert(err) )
+    
 
       }
       
@@ -66,7 +66,10 @@ function Much({route}){
         setVisibleModal(false)
         setEconom(Number(econom))
         setMoney(Number(money))
-         
+
+        let econom = Number(econom);
+        let money = Number(money);
+
         if(econom > money){
             setMessage('')  
             setVisibleModal(true)
@@ -111,7 +114,7 @@ function Much({route}){
     return(
        <ScrollView  showsVerticalScrollIndicator={false}>
            <KeyboardAvoidingView>
-           <Animated.View style={styles.viewAnime}>
+           <Animated.View style={[styles.viewAnime,{opacity: opacity}]}>
                 <Text style={styles.text}>Agora falta pouco {route.params?.name}! </Text>
             </Animated.View>
             <Animated.View style={{opacity: opacityTwo}} >
@@ -172,7 +175,6 @@ const styles = StyleSheet.create({
     },
     viewAnime: { 
         height: 200, 
-        opacity: opacity, 
         justifyContent: 'flex-end', 
         alignItems: 'center', 
         marginBottom: 20

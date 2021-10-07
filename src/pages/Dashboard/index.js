@@ -13,25 +13,32 @@ import { LinearGradient } from 'expo-linear-gradient';
 import DatePicker from 'react-native-datepicker';
 
 import Financa from '../../Components/ListaFinancas';
+import Finance from '../../Services/sqlite/Finance';
+import Bill from '../../Services/sqlite/Bill';
+
 
 function List(){
 
-    const [ total, setTotal ] = useState(1700.00);
+    const [ total, setTotal ] = useState(0);
     const [ name, setName ] = useState('');
+    const [ id, setId] = useState(0);
+    const [ dateCurrent, setDateCurrent ] =useState('')
+    const [ financaId, setFinancaId ] =useState(0)
+    const [ dateKey, setDateKey ] = useState('')
 
-    const [ gastos, setGastos ] = useState(678.00);
-    const [ economia, setEconomia ] = useState(500.00);
-    const [ sobra, setSobra ] = useState(522.00);
-    const [ gastosP, setGastosP ] = useState(39.88);
-    const [ economiaP, setEconomiaP ] = useState(29.41);
-    const [ sobraP, setSobraP ] = useState(30.70);
+
+    const [ gastos, setGastos ] = useState(0);
+    const [ economia, setEconomia ] = useState(0);
+    const [ sobra, setSobra ] = useState(0);
+    const [ gastosP, setGastosP ] = useState(0);
+    const [ economiaP, setEconomiaP ] = useState(0);
+    const [ sobraP, setSobraP ] = useState(0);
 
     const navigation = useNavigation(); 
 
 
-    
     const [ date, setDate ] = useState('');
-    const [ feed, setFeed ] = useState([{ id: '1', 
+    const [ feed, setFeed ] = useState([/* { id: '1', 
                                         desc: 'Conta Luz', 
                                         valor:'R$ 143,78', 
                                         data: '06/08/2021', 
@@ -72,7 +79,7 @@ function List(){
                                         valor: 'R$ 56,00', 
                                         data: '06/08/2021', 
                                         icon: 'ios-remove-circle-outline',
-                                        color: '#FF004E'}, ])
+                                        color: '#FF004E'},  */])
 
     
     LogBox.ignoreAllLogs(true);
@@ -81,31 +88,60 @@ function List(){
      useEffect(() => {
      
         
-        loadData()
+        loadData();
 
 
     }) 
 
     function screenDebt(){
-        navigation.navigate('insertDebt')
+        getDate()
+        
+        let key = dateCurrent.substring(3,10);
+        setDateKey(key)
+        navigation.navigate('insertDebt', {key: dateKey} )
 
     }
 
 
     function screenAddiitonal(){
+     
         navigation.navigate('insertAdditional')
 
     }
     
+    function getDate(){
+        let data = new Date();
+        let dia = String(data.getDate()).padStart(2, '0');
+        let mes = String(data.getMonth() + 1).padStart(2, '0');
+        let ano = data.getFullYear();
+        setDateCurrent(dia + '/' + mes + '/' + ano)
+    }
+
     async function loadData(){
+
+        getDate()
+
+        let key = dateCurrent.substring(3,10);
+        setDateKey(key)
+
+        Finance.findByDateKey( key ) 
+        .then( data => setFeed(data))
+        .catch( err => console.log(err) )
         
+
+        /* 
        let response = await AsyncStorage.getItem('finance')
        setName(await AsyncStorage.getItem('user'))
        let data =  JSON.parse(response)
-       //let count =  Object.keys(data).lenght - 1; 
-       setTotal(data.money)
+ */
 
-       var result = [];
+
+
+
+       //let count =  Object.keys(data).lenght - 1; 
+       //setTotal(data.money)
+
+       /* var result = [];
       
        result = Object.entries(data)
        let pos=[]
@@ -122,7 +158,7 @@ function List(){
         console.log( resp[1])
 
 
-       }
+       } */
         
     }
 
@@ -143,8 +179,6 @@ function List(){
         
         alert('entrou')
 
-         
-
     }
   
  
@@ -153,7 +187,7 @@ function List(){
         <View style={styles.container}>
             <View style={styles.card}>
                 <View style={{flex:1, alignItems: 'center', paddingTop: 20}}>
-                <Text style={{color: '#24AE5F', fontSize: 22}} >Total: {total}</Text>
+                <Text style={{color: '#24AE5F', fontSize: 22}} >Total: {id}</Text>
                 </View>
                 <View style={{flex: 2, flexDirection: 'row', padding: 18}}>
                     <View style={[styles.column, {justifyContent: 'space-around',}]}>

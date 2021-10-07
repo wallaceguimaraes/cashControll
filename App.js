@@ -2,7 +2,6 @@ import React from 'react';
 import { NavigationContainer} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-
 import Ola from './src/pages/Home';
 import Dash from './src/pages/Dashboard';
 import Name from './src/pages/Home/name';
@@ -10,6 +9,8 @@ import Much from './src/pages/Home/much';
 import MuchEconom from './src/pages/Home/muchEconom';
 import insertDebt from './src/pages/Insert/insertDebt';
 import insertAdditional from './src/pages/Insert/insertAdditional';
+import  AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect } from 'react/cjs/react.development';
 
 
 const Stack = createNativeStackNavigator();
@@ -21,11 +22,31 @@ export default function App() {
  * Caso exista verificar se iniciou um novo mes
  * para gerar outra renda
  */
-let rotaInicio = 'Ola';
-  if(1 === 1){
-    rotaInicio = 'Ola';
+
+
+ if ( 1 === 1){
+  rotaInicio = 'Dashboard';
+}
+
+  async function getUser(){
+    let usuario = null;
+
+/*     try{
+    let usuario = await AsyncStorage.getItem("usuario")
+    }catch(e){
+      usuario = null;
+    } */
+    let rotaInicio = 'Ola';
+    if(usuario !== null){
+      rotaInicio = 'Dashboard';
+    }
+  
   }
 
+/* 
+  useEffect(() => {
+    getUser()
+  }) */
 
   return (
     <NavigationContainer >

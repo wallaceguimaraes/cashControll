@@ -1,13 +1,55 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, ScrollView, LogBox } from 'react-native';
+import { StyleSheet, Modal, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, ScrollView, LogBox } from 'react-native';
 import DatePicker from 'react-native-datepicker';
+import Finance from '../../Services/sqlite/Finance';
+import Bill from '../../Services/sqlite/Bill';
+import { useNavigation } from "@react-navigation/native";
+import ViewModal from "../Home/viewModal";
 
 
-function insertDebt(){
+function insertDebt({route}){
 
     LogBox.ignoreAllLogs(true);
 
+    const [ desc, setDesc ] = useState('');
     const [ date, setDate ] = useState('');
+    const [ value, setValue ] = useState('');
+    const [ icon, setIcon ] = useState('ios-remove-circle-outline');
+    const [ color, setColor ] = useState('#FF004E');
+    const [ message, setMessage] = useState('');
+    const [ visibleModal, setVisibleModal ] = useState(false);
+
+    const navigation = useNavigation(); 
+
+
+    function getDate(){
+        let data = new Date();
+        let dia = String(data.getDate()).padStart(2, '0');
+        let mes = String(data.getMonth() + 1).padStart(2, '0');
+        let ano = data.getFullYear();
+        setDate(dia + '/' + mes + '/' + ano)
+    }
+
+    function closeModal(boolean){
+        setVisibleModal(boolean)
+    }
+    function create(){
+       
+      if(date === ''){
+        setVisibleModal(true)
+        setMessage('Selecione a data!')
+          return
+      }  
+      //let financeId = Number(route.params?.id);
+     // let value = Number(value)
+
+      Bill.create( {desc: desc, date: date, value: value, icon: icon, color: color, date_key: route.params?.key } )
+      .then( id =>  navigation.navigate('Dashboard') )
+      .catch( err => alert(err) )
+
+
+    }
+
 
     return(
         <ScrollView  showsVerticalScrollIndicator={false}>
@@ -40,7 +82,9 @@ function insertDebt(){
                         </View >
 
                         <View style={{height: 90, alignItems: 'center', justifyContent: 'flex-end', marginBottom: 20}}>
-                        <TextInput keyboardType="number-pad" textAlign='center' style={{fontSize: 24, borderRadius:10, borderBottomWidth: 1, padding:5, borderColor:'#c4c4c4', width: 250, height: 44}} 
+                        <TextInput  onChangeText={(text) => setDesc(text)}
+                                    textAlign='center' 
+                                    style={{fontSize: 24, borderRadius:10, borderBottomWidth: 1, padding:5, borderColor:'#c4c4c4', width: 250, height: 44}} 
                         />
                         </View>
 
@@ -53,11 +97,21 @@ function insertDebt(){
             </View >
 
             <View style={{height: 90, alignItems: 'center', justifyContent: 'flex-end', marginBottom: 20}}>
-               <TextInput keyboardType="number-pad" textAlign='center' style={{fontSize: 24, borderRadius:10, borderBottomWidth: 1, padding:5, borderColor:'#c4c4c4', width: 250, height: 44}} 
+               <TextInput   onChangeText={(text) => setValue(text)}
+                            keyboardType="number-pad" 
+                            textAlign='center' 
+                            style={{fontSize: 24, borderRadius:10, borderBottomWidth: 1, padding:5, borderColor:'#c4c4c4', width: 250, height: 44}} 
             />
             </View>
+            
+            <Modal animationType='slide' transparent={true} visible={visibleModal}>
+              <View style={{flex: 1, margin: 15, alignItems: 'center', justifyContent: 'center'}}>
+                 <ViewModal close={() => closeModal(false)} message={message} ></ViewModal>
+              </View>
+            </Modal>
 
-            <TouchableOpacity style={ styles.button}>
+            <TouchableOpacity   onPress={() => create()}
+                                style={ styles.button}>
                 <Text style={{color: '#ffffff', fontSize: 18, fontWeight: 'bold', flexWrap:'wrap' }}>Adicionar</Text>
             </TouchableOpacity>
         </KeyboardAvoidingView>

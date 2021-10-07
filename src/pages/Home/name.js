@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Keyboard } from 'react-native';
 import Think from '../../../assets/icons/think.svg';
 import Smile from '../../../assets/icons/smile.svg';
+import  AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from "@react-navigation/native";
 
 function Name ({route}){
@@ -11,9 +12,15 @@ function Name ({route}){
     const [ face, setFace] = useState(false); 
     const navigation = useNavigation(); 
 
-    function gravarNome(name){
-        navigation.navigate('Much', {name: name})
+     function gravarNome(name){
+    //  let response = await AsyncStorage.setItem("usuario", name)
+      //setName(await AsyncStorage.getItem('user'))
+      //let data =  JSON.parse(response)
+        
+      //if(data !== null){
+      navigation.navigate('Much', {name: name})
         //Keyboard.dismiss();
+      //}
       }
     
     useEffect(() => {

@@ -17,8 +17,8 @@ function Financa(props){
                 <View style={{height:1, backgroundColor:'#E5E5E5'}}></View>
             </View>
             <View style={{flex: 2.4, alignItems:'flex-end' }}>
-                <Text style={{fontSize:18, color:props.data.color, marginTop: 18}} >{props.data.valor}</Text>
-                <Text style={{fontSize:14, color:'#787878', marginTop: -5}}>{props.data.data}</Text>
+                <Text style={{fontSize:18, color:props.data.color, marginTop: 18}} >{`R$ ${props.data.value}`}</Text>
+                <Text style={{fontSize:14, color:'#787878', marginTop: -5}}>{props.data.date}</Text>
                 <View style={{height:1, backgroundColor:'#E5E5E5'}}></View>
             </View>
         </View>
