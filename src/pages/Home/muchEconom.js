@@ -6,7 +6,7 @@ import { StyleSheet,
          TouchableOpacity, 
          Keyboard,
          Modal } from 'react-native';
- import ViewModal from './viewModal';        
+ import ViewModal from '../../Components/viewModal';        
 import Money from '../../../assets/icons/money.svg';
 
 function MuchEconom(){

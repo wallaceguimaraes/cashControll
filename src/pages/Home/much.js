@@ -11,7 +11,7 @@ import { Animated,
          KeyboardAvoidingView } from 'react-native';
 import Money from '../../../assets/icons/money.svg';
 import Down from '../../../assets/icons/down.svg';
-import ViewModal from './viewModal';
+import ViewModal from '../../Components/viewModal';
 import  AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from "@react-navigation/native";
 import Finance from '../../Services/sqlite/Finance';

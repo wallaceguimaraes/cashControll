@@ -4,7 +4,7 @@ import DatePicker from 'react-native-datepicker';
 import Finance from '../../Services/sqlite/Finance';
 import Bill from '../../Services/sqlite/Bill';
 import { useNavigation } from "@react-navigation/native";
-import ViewModal from "../Home/viewModal";
+import ViewModal from "../../Components/viewModal";
 
 
 function insertDebt({route}){
