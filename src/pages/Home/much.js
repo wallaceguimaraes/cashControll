@@ -16,13 +16,16 @@ import  AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from "@react-navigation/native";
 import Finance from '../../Services/sqlite/Finance';
 import User from '../../Services/sqlite/User';
+import { TextInputMask } from 'react-native-masked-text';
 
 
 
 function Much({route}){
 
-    const [ money, setMoney ] = useState(0)
-    const [ econom, setEconom ] = useState(0)
+    const [ money, setMoney ] = useState('0')
+    const [ econom, setEconom ] = useState('0')
+    const [ moneyInit, setMoneyInit ] = useState(0)
+    const [ economInit, setEconomInit ] = useState(0)
     const [ dateKey, setDateKey ] = useState('')
     const [ visibleModal, setVisibleModal ] = useState(false)
     const [ message, setMessage] = useState('')
@@ -52,19 +55,20 @@ function Much({route}){
         setDateKey(key)
    
 
-        setEconom(Number(econom))
-        setMoney(Number(money))
-
-        let rest = money - econom;
+        let rest = moneyInit - economInit;
 
 
+        /* console.log('Nome '+route.params?.name)
         User.create({name: route.params?.name})
         .then( id => console.log(id) )
         .catch( err => alert(err) )
-    
+         */
+        
 
-        Finance.create( {date_current: dateCurrent, date_key: key, total: money, econom: econom, rest: rest } )
+        Finance.create( {date_current: dateCurrent, date_key: key, total: moneyInit, econom: economInit, rest: rest } )
         .then( id =>  navigation.navigate('Dashboard', {id: id}) )
+        //.then( id =>  navigation.navigate('Dashboard') )
+
         .catch( err => alert(err) )
     
 
@@ -73,29 +77,40 @@ function Much({route}){
       
 
     function verifyMoney(){
+
+
         
         setVisibleModal(false)
-      /*   setEconom(Number(econom))
-        setMoney(Number(money))
+        
 
-        let econom = Number(econom);
-        let money = Number(money); */
+        let economInit = econom.replace("R$","")
+        economInit = economInit.replace(".","")
+        economInit = economInit.replace(",","")
 
-        console.log(typeof money)
+        let moneyInit = money.replace("R$","")
+        moneyInit = moneyInit.replace(".","")
+        moneyInit = moneyInit.replace(",","")
+        
+        let mone = Number(moneyInit)
+        let econo = Number(economInit)        
 
-        if(econom > money){
 
+        console.log(moneyInit)
+
+        if(econo > mone){
             setMessage('')  
             setVisibleModal(true)
             return
         }
 
-        if(econom === money){
+        if(econo === mone){
             setVisibleModal(true)
             setMessage('Você não pode economizar tudo isso!')
             return 
         }
 
+        setMoneyInit(mone)
+        setEconomInit(econo) 
        saveInfo()
     }
 
@@ -137,10 +152,19 @@ function Much({route}){
                     <Text style={styles.text}>qual valor?</Text>
                 </View >
                 <View style={styles.viewInput}>
-                    <TextInput  keyboardType="number-pad" 
+                    <TextInputMask
+                            type={'money'}
+                         /*    options={{
+                              precision: 2,
+                              separator: ',',
+                              delimiter: '.',
+                             // unit: 'R$',
+                              suffixUnit: ''
+                            }} */
+                                value={money}
                                 textAlign='center' 
                                 style={styles.input} 
-                                onChangeText={text => setMoney(Number(text))}
+                                onChangeText={text => setMoney(text)}
                     />
                 </View>
                 <View style={styles.viewIcon}>
@@ -153,10 +177,13 @@ function Much({route}){
                     <Text style={styles.text}>economizar?</Text>
                 </View >
                 <View style={styles.viewInput}>
-                <TextInput  keyboardType="number-pad" 
+                <TextInputMask  
+                            type={'money'}
+                            //keyboardType="number-pad" 
                             textAlign='center' 
                             style={styles.input} 
-                            onChangeText={text => setEconom(Number(text))} />
+                            value={econom}
+                            onChangeText={text => setEconom(text)} />
                 </View>
 
                 <View style={styles.viewButton}>

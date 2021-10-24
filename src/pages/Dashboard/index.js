@@ -18,7 +18,7 @@ import Bill from '../../Services/sqlite/Bill';
 import User from '../../Services/sqlite/User';
 
 
-function List(){
+function List({route}){
 
    
 

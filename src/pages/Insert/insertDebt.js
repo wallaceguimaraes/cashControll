@@ -5,6 +5,8 @@ import Finance from '../../Services/sqlite/Finance';
 import Bill from '../../Services/sqlite/Bill';
 import { useNavigation } from "@react-navigation/native";
 import ViewModal from "../../Components/viewModal";
+import { TextInputMask } from 'react-native-masked-text';
+
 
 
 function insertDebt({route}){
@@ -13,7 +15,7 @@ function insertDebt({route}){
 
     const [ desc, setDesc ] = useState('');
     const [ date, setDate ] = useState('');
-    const [ value, setValue ] = useState('');
+    const [ value, setValue ] = useState('0');
     const [ icon, setIcon ] = useState('ios-remove-circle-outline');
     const [ color, setColor ] = useState('#FF004E');
     const [ message, setMessage] = useState('');
@@ -97,8 +99,12 @@ function insertDebt({route}){
             </View >
 
             <View style={{height: 90, alignItems: 'center', justifyContent: 'flex-end', marginBottom: 20}}>
-               <TextInput   onChangeText={(text) => setValue(text)}
-                            keyboardType="number-pad" 
+               <TextInputMask 
+                            type={'money'}
+                              //keyboardType="number-pad" 
+                              
+                            value={value}  
+                            onChangeText={(text) => setValue(text)}
                             textAlign='center' 
                             style={{fontSize: 24, borderRadius:10, borderBottomWidth: 1, padding:5, borderColor:'#c4c4c4', width: 250, height: 44}} 
             />
