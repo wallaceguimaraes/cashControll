@@ -112,7 +112,7 @@ const find = (id) => {
       //comando SQL modificável
       tx.executeSql(
         //"SELECT * FROM finance WHERE date_key = ?;",
-        "SELECT b.* FROM bill b where b.date_key = ? order by b.date DESC;",
+        "SELECT b.* from bill b where b.date_key = ? order by b.date DESC;",
         [dateKey],
         //-----------------------
         (_, { rows }) => {

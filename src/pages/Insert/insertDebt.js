@@ -36,6 +36,9 @@ function insertDebt({route}){
         setVisibleModal(boolean)
     }
     function create(){
+
+        console.log(route.params?.key)
+
        
       if(date === ''){
         setVisibleModal(true)

@@ -7,9 +7,9 @@ import db from "../sqlite/SQLiteDatabase";
  * - Executa sempre, mas só cria a tabela caso não exista (primeira execução)
  */
 
- db.exec([{ sql: 'PRAGMA foreign_keys = ON;', args: [] }], false, () =>
+/*  db.exec([{ sql: 'PRAGMA foreign_keys = ON;', args: [] }], false, () =>
  console.log('Foreign keys turned on')
-);
+); */
 
 
 

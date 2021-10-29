@@ -3,10 +3,12 @@ import { StyleSheet, View, Text, TextInput, TouchableOpacity,Modal, KeyboardAvoi
 import DatePicker from 'react-native-datepicker';
 import { TextInputMask } from 'react-native-masked-text';
 import Credit from '../../Services/sqlite/Credit';
+import { useNavigation } from "@react-navigation/native";
+
 import ViewModal from "../../Components/viewModal";
 
 
-function insertAdditional(){
+function insertAdditional({route}){
 
     LogBox.ignoreAllLogs(true);
 
@@ -17,15 +19,19 @@ function insertAdditional(){
     const [ color, setColor ] = useState('#24AE5F');
     const [ message, setMessage] = useState('');
     const [ visibleModal, setVisibleModal ] = useState(false);
+    const [ dateCurrent, setDateCurrent ] =useState('')
+
 
     const navigation = useNavigation(); 
-
 
     function closeModal(boolean){
         setVisibleModal(boolean)
     }
     function create(){
-       
+        //console.log(route.params?.key)
+
+
+
       if(date === ''){
         setVisibleModal(true)
         setMessage('Selecione a data!')
@@ -88,6 +94,7 @@ function insertAdditional(){
             <View style={{height: 90, alignItems: 'center', justifyContent: 'flex-end', marginBottom: 20}}>
                <TextInputMask 
                  type={'money'}
+                 value={value}
                  //keyboardType="number-pad" 
                  onChangeText={(text) => setValue(text)}
 
